@@ -1,0 +1,1 @@
+CREATE TABLE herb (int id PRIMARY,)
