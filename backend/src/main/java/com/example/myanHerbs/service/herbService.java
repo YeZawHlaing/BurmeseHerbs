@@ -11,4 +11,5 @@ public interface herbService {
     boolean updateHerbs(herbDto herbDto, Long id);
     boolean deleteHerbs(Long id);
     List<herbDto> getHerbsByName(String name);
+    List<herbDto> readHerbByPagination(int pageNumber, int pageSize) throws IllegalAccessException;
 }

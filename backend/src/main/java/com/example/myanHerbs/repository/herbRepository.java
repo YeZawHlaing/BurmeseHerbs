@@ -10,7 +10,11 @@ import java.util.Optional;
 
 public interface herbRepository extends JpaRepository<herb, Long> {
 
-    Optional<herb> findByName(String name);
-    @Query("SELECT h FROM herb h WHERE h.name LIKE %:name%")
+    Optional<herb> findById(Long id); //ORM
+
+    @Query("SELECT h FROM herb h WHERE h.name LIKE %:name%")//native query
     List<herb> findByNameContaining(@Param("name") String name);
+
+    @Query(value = "SELECT h.* FROM herb h LIMIT :limit OFFSET :offset", nativeQuery = true)
+    List<herb> findAllWithDetailsPaginated(@Param("limit") int limit, @Param("offset") int offset);
 }

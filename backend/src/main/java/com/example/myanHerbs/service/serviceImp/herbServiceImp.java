@@ -5,6 +5,7 @@ import com.example.myanHerbs.model.herb;
 import com.example.myanHerbs.repository.herbRepository;
 import com.example.myanHerbs.service.herbService;
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.service.spi.ServiceException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,5 +78,21 @@ public class herbServiceImp implements herbService {
         return herb.stream()
                 .map(herb1 -> modelMapper.map(herb, herbDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<herbDto> readHerbByPagination(int pageNumber, int pageSize) throws IllegalAccessException {
+        pageNumber = Math.max(pageNumber, 1);
+        pageSize = (pageSize < 1) ? 10 : pageSize;
+
+        int offset = (pageNumber - 1) * pageSize;
+        try {
+            List<herb> herbList = herbRepository.findAllWithDetailsPaginated(pageSize, offset);
+            return herbList.stream()
+                    .map(herb1 -> modelMapper.map(herb1, herbDto.class))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new ServiceException("An error occurred while retrieving herbs", e);
+        }
     }
 }
